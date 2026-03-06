@@ -1,0 +1,270 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skills.json.org/schema/1.0.0/skills.schema.json",
+  "title": "skills.json",
+  "description": "Publisher-side package metadata for AI agent skill packages. Describes what skills exist in a package and provides metadata for package managers, registries, and search tools.",
+  "type": "object",
+  "required": ["name", "version", "description", "skills"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URL to the JSON Schema for validation"
+    },
+    "name": {
+      "type": "string",
+      "description": "Package identifier. Lowercase, hyphens and dots allowed. Must be unique within a registry.",
+      "pattern": "^[a-z][a-z0-9._-]*$",
+      "minLength": 1,
+      "maxLength": 128,
+      "examples": ["anthropic-document-skills", "my-react-skill"]
+    },
+    "version": {
+      "type": "string",
+      "description": "Semver version of the package.",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "examples": ["1.0.0", "0.1.0-beta.1"]
+    },
+    "description": {
+      "type": "string",
+      "description": "One-line package summary.",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "author": {
+      "oneOf": [
+        { "$ref": "#/definitions/author" },
+        { "$ref": "#/definitions/authorShorthand" }
+      ],
+      "description": "Package author. Object form or npm-style shorthand string."
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier or 'SEE LICENSE' for non-standard licenses. Inherited by skills unless overridden.",
+      "examples": ["MIT", "Apache-2.0", "SEE LICENSE"]
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri",
+      "description": "Documentation or landing page URL.",
+      "examples": ["https://agentskills.io"]
+    },
+    "repository": {
+      "oneOf": [
+        { "$ref": "#/definitions/repository" },
+        { "$ref": "#/definitions/repositoryShorthand" }
+      ],
+      "description": "Source repository. Object form or URL shorthand string for git repos."
+    },
+    "keywords": {
+      "type": "array",
+      "description": "Package-level search terms.",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64
+      },
+      "maxItems": 32,
+      "uniqueItems": true
+    },
+    "skills": {
+      "type": "array",
+      "description": "Array of skills in this package.",
+      "items": { "$ref": "#/definitions/skill" },
+      "minItems": 1
+    }
+  },
+  "definitions": {
+    "author": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Display name.",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Website or profile URL."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Contact email."
+        }
+      }
+    },
+    "authorShorthand": {
+      "type": "string",
+      "description": "npm-style author shorthand: 'Name <email> (url)'. Email and URL are optional.",
+      "pattern": "^.+$",
+      "examples": [
+        "Anthropic",
+        "Chris <chris@example.com>",
+        "Chris <chris@example.com> (https://example.com)"
+      ]
+    },
+    "repository": {
+      "type": "object",
+      "required": ["type", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Repository type.",
+          "enum": ["git", "mercurial", "svn"]
+        },
+        "url": {
+          "type": "string",
+          "description": "Clone URL.",
+          "examples": [
+            "https://github.com/anthropics/skills.git",
+            "git@github.com:anthropics/skills.git"
+          ]
+        },
+        "directory": {
+          "type": "string",
+          "description": "Subdirectory within the repo if skills.json is not at the root.",
+          "examples": ["packages/skills"]
+        }
+      }
+    },
+    "repositoryShorthand": {
+      "type": "string",
+      "description": "URL shorthand for git repositories.",
+      "examples": ["https://github.com/anthropics/skills"]
+    },
+    "skill": {
+      "type": "object",
+      "required": ["name", "path", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique skill identifier within this package. Should match the directory name. Lowercase, hyphens allowed.",
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "path": {
+          "type": "string",
+          "description": "Relative path from skills.json to the skill directory.",
+          "examples": ["./frontend-design", "./skills/pdf", "."]
+        },
+        "description": {
+          "type": "string",
+          "description": "What this skill does and when to use it. Used by registries, search, and agent skill selection.",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "version": {
+          "type": "string",
+          "description": "Skill-specific version override. Defaults to the package version.",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+        },
+        "integrity": {
+          "type": "string",
+          "description": "SRI-format hash of skill directory contents for verification and caching.",
+          "pattern": "^(sha256|sha384|sha512)-[A-Za-z0-9+/=]+$",
+          "examples": ["sha256-K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols="]
+        },
+        "entrypoint": {
+          "type": "string",
+          "description": "Main instruction file relative to path. Defaults to 'SKILL.md'.",
+          "default": "SKILL.md"
+        },
+        "category": {
+          "type": "string",
+          "description": "Primary category for organisation and filtering.",
+          "examples": [
+            "development",
+            "documents",
+            "creative",
+            "business",
+            "productivity",
+            "infrastructure",
+            "data",
+            "testing"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "description": "Search and filter tags.",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "maxItems": 32,
+          "uniqueItems": true,
+          "examples": [["react", "css", "ui", "frontend"]]
+        },
+        "license": {
+          "type": "string",
+          "description": "SPDX license identifier override for this skill."
+        },
+        "author": {
+          "oneOf": [
+            { "$ref": "#/definitions/author" },
+            { "$ref": "#/definitions/authorShorthand" }
+          ],
+          "description": "Author override for this skill."
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "Names of other skills within this package that must also be installed for this skill to function.",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*$"
+          },
+          "uniqueItems": true
+        },
+        "requires": {
+          "$ref": "#/definitions/requires"
+        }
+      }
+    },
+    "requires": {
+      "type": "object",
+      "description": "Compatibility constraints for this skill.",
+      "additionalProperties": false,
+      "properties": {
+        "min_agent_versions": {
+          "type": "object",
+          "description": "Minimum agent versions required. Keys are agent slugs, values are semver strings.",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "examples": [
+            {
+              "claude-code": "1.0.0",
+              "cursor": "0.45.0"
+            }
+          ]
+        },
+        "tools": {
+          "type": "array",
+          "description": "Required tool or runtime availability on the host system.",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "examples": [["python3", "node", "ffmpeg"]]
+        },
+        "skills": {
+          "type": "array",
+          "description": "External skill dependencies from other packages. Format: 'package-name/skill-name'.",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9._-]*/[a-z][a-z0-9_-]*$"
+          },
+          "uniqueItems": true,
+          "examples": [["anthropic-document-skills/pdf"]]
+        }
+      }
+    }
+  }
+}
