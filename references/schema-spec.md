@@ -1,11 +1,11 @@
-# skills.json Specification
+# skill.json Specification
 
 **Version:** 1.0.0-draft
 **Purpose:** Publisher-side package metadata for AI agent skill packages
 
 ## Overview
 
-`skills.json` lives at the root of a skill package (a repository, directory, or archive containing one or more AI agent skills). It tells any package manager what skills exist in this package, where to find them, and enough metadata to index, search, verify, and install them.
+`skill.json` lives at the root of a skill package (a repository, directory, or archive containing one or more AI agent skills). It tells any package manager what skills exist in this package, where to find them, and enough metadata to index, search, verify, and install them.
 
 It does **not** declare which agents to install to, or which skills a consumer project needs. Those are consumer-side concerns handled by installer tools (skmr, skillman, skillbox, skills-supply, etc.).
 
@@ -20,15 +20,15 @@ It does **not** declare which agents to install to, or which skills a consumer p
 
 ### Relationship to SKILL.md
 
-Each skill folder already contains a `SKILL.md` with YAML frontmatter (`name`, `description`, optional `license`). `skills.json` does **not** replace this — it wraps it with package-level context and enriches per-skill metadata for tooling that shouldn't need to parse markdown frontmatter.
+Each skill folder already contains a `SKILL.md` with YAML frontmatter (`name`, `description`, optional `license`). `skill.json` does **not** replace this — it wraps it with package-level context and enriches per-skill metadata for tooling that shouldn't need to parse markdown frontmatter.
 
-If `skills.json` and SKILL.md frontmatter conflict, `skills.json` is authoritative for tooling purposes. SKILL.md remains authoritative for the agent at runtime.
+If `skill.json` and SKILL.md frontmatter conflict, `skill.json` is authoritative for tooling purposes. SKILL.md remains authoritative for the agent at runtime.
 
 ## File Location
 
 ```
 my-skill-package/
-├── skills.json              ← this file
+├── skill.json               ← this file
 ├── frontend-design/
 │   ├── SKILL.md
 │   └── references/
@@ -60,7 +60,7 @@ my-skill-package/
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `name` | `string` | **Yes** | Unique skill identifier within this package. Must match the directory name. Lowercase, hyphens allowed |
-| `path` | `string` | **Yes** | Relative path from `skills.json` to the skill directory. e.g. `"./frontend-design"` |
+| `path` | `string` | **Yes** | Relative path from `skill.json` to the skill directory. e.g. `"./frontend-design"` |
 | `description` | `string` | **Yes** | What this skill does and when to use it. Used by registries and search |
 | `version` | `string` | No | Skill-specific version override. Defaults to package `version` |
 | `integrity` | `string` | No | SRI-format hash of skill directory contents. e.g. `"sha256-abc123..."` |
@@ -88,7 +88,7 @@ Shorthand: `"author": "Name <email> (url)"` is also valid, following npm convent
 |-------|------|----------|-------------|
 | `type` | `string` | **Yes** | Repository type: `"git"`, `"mercurial"`, etc. |
 | `url` | `string` | **Yes** | Clone URL. e.g. `"https://github.com/org/repo.git"` |
-| `directory` | `string` | No | Subdirectory within the repo if skills.json isn't at the root |
+| `directory` | `string` | No | Subdirectory within the repo if skill.json isn't at the root |
 
 Shorthand: `"repository": "https://github.com/org/repo"` is also valid for git repos.
 
@@ -134,7 +134,7 @@ Package managers **should** verify integrity on install when the field is presen
 
 ```json
 {
-  "$schema": "https://skills.json.org/schema/1.0.0/skills.schema.json",
+  "$schema": "https://skill.json.org/schema/1.0.0/skill.schema.json",
   "name": "my-react-skill",
   "version": "0.1.0",
   "description": "React best practices for modern applications",
@@ -154,7 +154,7 @@ Note: when a package contains a single skill at its root, `"path": "."` is valid
 
 ```json
 {
-  "$schema": "https://skills.json.org/schema/1.0.0/skills.schema.json",
+  "$schema": "https://skill.json.org/schema/1.0.0/skill.schema.json",
   "name": "anthropic-document-skills",
   "version": "2.1.0",
   "description": "Document creation and manipulation skills for Claude",
@@ -222,7 +222,7 @@ Note: when a package contains a single skill at its root, `"path": "."` is valid
 
 ```json
 {
-  "$schema": "https://skills.json.org/schema/1.0.0/skills.schema.json",
+  "$schema": "https://skill.json.org/schema/1.0.0/skill.schema.json",
   "name": "fullstack-dev-kit",
   "version": "1.0.0",
   "description": "Full-stack development skill pack",
@@ -261,15 +261,15 @@ Note: when a package contains a single skill at its root, `"path": "."` is valid
 }
 ```
 
-### Monorepo With Nested skills.json
+### Monorepo With Nested skill.json
 
-In a monorepo, `skills.json` can live in a subdirectory:
+In a monorepo, `skill.json` can live in a subdirectory:
 
 ```
 monorepo/
 ├── packages/
 │   └── skills/
-│       ├── skills.json        ← repository.directory = "packages/skills"
+│       ├── skill.json         ← repository.directory = "packages/skills"
 │       ├── my-skill-a/
 │       │   └── SKILL.md
 │       └── my-skill-b/
@@ -296,9 +296,9 @@ monorepo/
 
 ## Compatibility Mapping
 
-How each existing tool can consume `skills.json`:
+How each existing tool can consume `skill.json`:
 
-| Tool | What it reads from skills.json |
+| Tool | What it reads from skill.json |
 |------|-------------------------------|
 | **skmr** | `skills[].name` to populate its manifest entries |
 | **skillman** | `skills[].name` to populate `{ source, skills: [...] }` |

@@ -1,24 +1,24 @@
 ---
-name: skills-json-generator
-description: Generate skills.json package metadata files for AI agent skill packages. Use this skill whenever the user wants to create, edit, or validate a skills.json file, when they're packaging skills for distribution, when they mention "skills.json", "skill manifest", "skill metadata", "skill package", or when they have a directory of SKILL.md files and need to make them discoverable by package managers (skmr, skillman, skillbox, skills-manifest, skills-supply, etc.). Also use when the user is publishing skills to a registry, preparing a skill repo for sharing, or wants to add integrity hashes to existing skill packages.
+name: skill-json-generator
+description: Generate skill.json package metadata files for AI agent skill packages. Use this skill whenever the user wants to create, edit, or validate a skill.json file, when they're packaging skills for distribution, when they mention "skill.json", "skill manifest", "skill metadata", "skill package", or when they have a directory of SKILL.md files and need to make them discoverable by package managers (skmr, skillman, skillbox, skills-manifest, skills-supply, etc.). Also use when the user is publishing skills to a registry, preparing a skill repo for sharing, or wants to add integrity hashes to existing skill packages.
 ---
 
-# skills.json Generator
+# skill.json Generator
 
-Generate and maintain `skills.json` package metadata files that work with any skill package manager in the ecosystem.
+Generate and maintain `skill.json` package metadata files that work with any skill package manager in the ecosystem.
 
-## What is skills.json?
+## What is skill.json?
 
-`skills.json` is a **publisher-side** metadata file that lives at the root of a skill package (a repo, directory, or archive containing one or more AI agent skills). It tells package managers what skills exist, where to find them, and provides enough metadata to index, search, verify, and install them.
+`skill.json` is a **publisher-side** metadata file that lives at the root of a skill package (a repo, directory, or archive containing one or more AI agent skills). It tells package managers what skills exist, where to find them, and provides enough metadata to index, search, verify, and install them.
 
 It does **not** declare which agents to install to (that's the installer's job), or which skills a consumer project needs (that's a consumer manifest concern).
 
 ## When to Use This Skill
 
-- User says "create a skills.json" or "package my skills"
+- User says "create a skill.json" or "package my skills"
 - User has SKILL.md files and wants to distribute them
 - User wants to publish skills to a registry
-- User needs to validate or update an existing skills.json
+- User needs to validate or update an existing skill.json
 - User mentions any skill package manager (skmr, skillman, skillbox, skills-supply, skills-manifest)
 - User is preparing a repo that contains skills for sharing
 
@@ -38,10 +38,10 @@ For each SKILL.md found, read the YAML frontmatter to extract `name`, `descripti
 head -20 path/to/SKILL.md
 ```
 
-Also check for an existing skills.json to determine if we're creating fresh or updating:
+Also check for an existing skill.json to determine if we're creating fresh or updating:
 
 ```bash
-test -f skills.json && cat skills.json || echo "No existing skills.json"
+test -f skill.json && cat skill.json || echo "No existing skill.json"
 ```
 
 ### Step 2: Gather Package-Level Metadata
@@ -55,7 +55,7 @@ Ask the user for anything that can't be inferred. Prioritise inferring from the 
 - Per-skill `path`, `name`, `description` — From SKILL.md frontmatter and location
 
 **Must ask the user for:**
-- `version` — Unless there's a tag, existing skills.json, or package.json to read from
+- `version` — Unless there's a tag, existing skill.json, or package.json to read from
 - `author` — Unless inferable from git config or package.json
 - `license` — Unless present in SKILL.md frontmatter or a LICENSE file
 
@@ -69,7 +69,7 @@ Ask the user for anything that can't be inferred. Prioritise inferring from the 
 
 Read `references/schema-spec.md` for the complete schema specification before generating.
 
-Build the skills.json following these rules:
+Build the skill.json following these rules:
 
 **Required fields at package level:**
 - `$schema` — Always include for validation support
@@ -80,7 +80,7 @@ Build the skills.json following these rules:
 
 **Required fields per skill:**
 - `name` — Must match directory name, lowercase with hyphens
-- `path` — Relative from skills.json to the skill directory (use `"."` for root-level single skills)
+- `path` — Relative from skill.json to the skill directory (use `"."` for root-level single skills)
 - `description` — What it does AND when to use it
 
 **Include when available:**
@@ -109,7 +109,7 @@ This produces an SRI-format hash (`sha256-...`) that goes in the skill's `integr
 Validate the generated file against the JSON Schema:
 
 ```bash
-python3 scripts/validate.py skills.json
+python3 scripts/validate.py skill.json
 ```
 
 Or validate inline with Python:
@@ -117,9 +117,9 @@ Or validate inline with Python:
 ```python
 import json, jsonschema
 
-with open('skills.schema.json') as f:
+with open('skill.schema.json') as f:
     schema = json.load(f)
-with open('skills.json') as f:
+with open('skill.json') as f:
     data = json.load(f)
 
 jsonschema.validate(data, schema)
@@ -141,7 +141,7 @@ When a repo IS the skill (SKILL.md at root):
 
 ```json
 {
-  "$schema": "https://skills.json.org/schema/1.0.0/skills.schema.json",
+  "$schema": "https://skill.json.org/schema/1.0.0/skill.schema.json",
   "name": "my-skill",
   "version": "1.0.0",
   "description": "What this skill does",
@@ -161,7 +161,7 @@ Skills in subdirectories:
 
 ```json
 {
-  "$schema": "https://skills.json.org/schema/1.0.0/skills.schema.json",
+  "$schema": "https://skill.json.org/schema/1.0.0/skill.schema.json",
   "name": "my-skill-pack",
   "version": "1.0.0",
   "description": "Collection of related skills",
@@ -237,7 +237,7 @@ When one skill in the package requires another:
 
 ## Package Manager Compatibility
 
-The generated skills.json works with all major skill package managers:
+The generated skill.json works with all major skill package managers:
 
 | Tool | What it reads |
 |------|--------------|
@@ -252,6 +252,6 @@ The generated skills.json works with all major skill package managers:
 ## Reference Files
 
 - `references/schema-spec.md` — Complete schema specification with all field types, constraints, and design rationale
-- `references/skills.schema.json` — JSON Schema file for validation
+- `references/skill.schema.json` — JSON Schema file for validation
 - `scripts/compute_integrity.py` — Compute SRI integrity hashes for skill directories
-- `scripts/validate.py` — Validate a skills.json against the schema
+- `scripts/validate.py` — Validate a skill.json against the schema

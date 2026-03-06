@@ -64,7 +64,7 @@ def compute_directory_integrity(skill_dir: Path) -> str:
                 continue
 
             # Skip the package manifest itself to avoid circular integrity references
-            if rel_path == "skills.json":
+            if rel_path == "skill.json":
                 continue
 
             file_hash = compute_file_hash(filepath)

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://skill.json.org/schema/1.0.0/skill.schema.json",
+  "name": "skill-json-generator",
+  "version": "1.0.0",
+  "description": "Generate, validate, and maintain skill.json package metadata files for AI agent skill packages",
+  "license": "MIT",
+  "keywords": ["meta", "packaging", "manifest", "skill-json", "registry"],
+  "skills": [
+    {
+      "name": "skill-json-generator",
+      "path": ".",
+      "description": "Generate skill.json package metadata files for AI agent skill packages. Use whenever the user wants to create, edit, or validate a skill.json, when packaging skills for distribution, or when preparing a skill repo for sharing with package managers like skmr, skillman, skillbox, skills-manifest, or skills-supply.",
+      "category": "development",
+      "tags": ["skill-json", "packaging", "manifest", "registry", "metadata", "distribution"],
+      "integrity": "sha256-MJGB4YPjO7/f6LVvYeOif7vCpnXOAwQCg3xzwXvc8lk=",
+      "requires": {
+        "tools": ["python3"]
+      }
+    }
+  ]
+}

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Validate a skills.json file against the JSON Schema.
+Validate a skill.json file against the JSON Schema.
 
 Usage:
-    python3 validate.py <skills.json>
-    python3 validate.py <skills.json> --schema <custom-schema.json>
-    python3 validate.py <skills.json> --check-paths
-    python3 validate.py <skills.json> --check-integrity
+    python3 validate.py <skill.json>
+    python3 validate.py <skill.json> --schema <custom-schema.json>
+    python3 validate.py <skill.json> --check-paths
+    python3 validate.py <skill.json> --check-integrity
 
 Options:
     --schema        Path to a custom JSON Schema file (defaults to bundled schema)
@@ -34,7 +34,7 @@ except ImportError:
 
 def load_bundled_schema() -> dict[str, Any]:
     """Load the JSON Schema bundled with this skill."""
-    schema_path = Path(__file__).parent.parent / "references" / "skills.schema.json"
+    schema_path = Path(__file__).parent.parent / "references" / "skill.schema.json"
     if not schema_path.exists():
         print(f"Bundled schema not found at {schema_path}", file=sys.stderr)
         sys.exit(1)
@@ -132,8 +132,8 @@ def check_internal_consistency(data: dict[str, Any]) -> list[str]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate a skills.json file")
-    parser.add_argument("file", help="Path to skills.json")
+    parser = argparse.ArgumentParser(description="Validate a skill.json file")
+    parser.add_argument("file", help="Path to skill.json")
     parser.add_argument("--schema", help="Path to custom JSON Schema file")
     parser.add_argument(
         "--check-paths",

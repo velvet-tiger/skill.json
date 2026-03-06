@@ -1,30 +1,32 @@
-# skills.json
+# skill.json
+
+Version 1.0.0
 
 A universal package metadata format for AI agent skills.
 
-`skills.json` sits at the root of a skill package and tells any package manager what's inside — which skills exist, where to find them, how to verify them, and enough metadata to make them searchable. It's designed to work with every skill package manager in the ecosystem rather than locking into any single one.
+`skill.json` sits at the root of a skill package and tells any package manager what's inside — which skills exist, where to find them, how to verify them, and enough metadata to make them searchable. It's designed to work with every skill package manager in the ecosystem rather than locking into any single one.
 
 ## The Problem
 
 The AI agent skills ecosystem has half a dozen package managers and no agreed-upon way for a skill package to describe itself. Each tool reinvents discovery: some scan for `SKILL.md` files, some expect a proprietary manifest, some only support GitHub. If you publish a skill today, it works with one or two tools at best.
 
-`skills.json` is the publisher-side answer. You describe your package once, and skmr, skillman, skillbox, skills-manifest, skills-supply, the MCP registry, and whatever comes next can all consume it.
+`skill.json` is the publisher-side answer. You describe your package once, and skmr, skillman, skillbox, skills-manifest, skills-supply, the MCP registry, and whatever comes next can all consume it.
 
 ## What It Is (and Isn't)
 
 **It is** publisher-side metadata. "Here's what's in this package."
 
-**It is not** a consumer manifest. It doesn't say "my project needs these skills" — that's what tools like skmr's `skills.json` or skills-supply's `agents.toml` do on the consumer side.
+**It is not** a consumer manifest. It doesn't say "my project needs these skills" — that's what tools like skmr's `skill.json` or skills-supply's `agents.toml` do on the consumer side.
 
 **It is not** an agent targeting file. It doesn't say "install to Claude Code and Cursor" — that's the installer's job. It only declares compatibility *constraints* (e.g. "this skill requires Claude Code 1.2+") when they genuinely exist.
 
 ## Quick Start
 
-Add a `skills.json` to the root of your skill repo:
+Add a `skill.json` to the root of your skill repo:
 
 ```json
 {
-  "$schema": "https://skills.json.org/schema/1.0.0/skills.schema.json",
+  "$schema": "https://skill.json.org/schema/1.0.0/skill.schema.json",
   "name": "my-skills",
   "version": "1.0.0",
   "description": "A collection of useful agent skills",
@@ -46,7 +48,7 @@ A realistic multi-skill package with all the trimmings:
 
 ```json
 {
-  "$schema": "https://skills.json.org/schema/1.0.0/skills.schema.json",
+  "$schema": "https://skill.json.org/schema/1.0.0/skill.schema.json",
   "name": "document-skills",
   "version": "2.1.0",
   "description": "Document creation and manipulation skills for AI agents",
@@ -108,7 +110,7 @@ A realistic multi-skill package with all the trimmings:
 | Field | Required | Description |
 |-------|----------|-------------|
 | `name` | Yes | Matches directory name, lowercase with hyphens |
-| `path` | Yes | Relative path from skills.json (`"."` for root-level) |
+| `path` | Yes | Relative path from skill.json (`"."` for root-level) |
 | `description` | Yes | What it does and when to use it |
 | `version` | No | Override of package version |
 | `integrity` | No | SRI hash for verification |
@@ -128,26 +130,26 @@ A realistic multi-skill package with all the trimmings:
 | `tools` | `["python3", "node"]` — runtime tools needed |
 | `skills` | `["other-package/skill-name"]` — cross-package dependencies |
 
-The full spec with design rationale lives in [`references/schema-spec.md`](references/schema-spec.md). The formal JSON Schema is at [`references/skills.schema.json`](references/skills.schema.json).
+The full spec with design rationale lives in [`references/schema-spec.md`](references/schema-spec.md). The formal JSON Schema is at [`references/skill.schema.json`](references/skill.schema.json).
 
 ## Tooling
 
-### Validate a skills.json
+### Validate a skill.json
 
 ```bash
-python3 scripts/validate.py skills.json
+python3 scripts/validate.py skill.json
 ```
 
 Add `--check-paths` to verify each skill's directory and SKILL.md exist, `--check-integrity` to verify hashes match, or `--strict` for both:
 
 ```bash
-python3 scripts/validate.py skills.json --strict
+python3 scripts/validate.py skill.json --strict
 ```
 
 JSON output for CI:
 
 ```bash
-python3 scripts/validate.py skills.json --strict --json
+python3 scripts/validate.py skill.json --strict --json
 ```
 
 ### Compute Integrity Hashes
@@ -169,11 +171,11 @@ The integrity field uses W3C Subresource Integrity format (`sha256-{base64}`). T
 
 ### AI Agent Skill
 
-This project also ships as an AI agent skill. Install the `skills-json-generator` skill into Claude Code, Cursor, or any agent that supports skills, and it can generate `skills.json` files for your projects by scanning for SKILL.md files, inferring metadata from git and frontmatter, and producing a validated output.
+This project also ships as an AI agent skill. Install the `skill-json-generator` skill into Claude Code, Cursor, or any agent that supports skills, and it can generate `skill.json` files for your projects by scanning for SKILL.md files, inferring metadata from git and frontmatter, and producing a validated output.
 
 ## Package Manager Compatibility
 
-`skills.json` is designed so that every existing tool can read the fields it cares about and ignore the rest.
+`skill.json` is designed so that every existing tool can read the fields it cares about and ignore the rest.
 
 | Tool | Reads | Notes |
 |------|-------|-------|
@@ -190,7 +192,7 @@ This project also ships as an AI agent skill. Install the `skills-json-generator
 
 **Single skill at repo root** — Set `"path": "."` when the repo *is* the skill.
 
-**Monorepo** — Use `repository.directory` to indicate where skills.json lives within a larger repo. Paths within `skills[]` are still relative to skills.json itself.
+**Monorepo** — Use `repository.directory` to indicate where skill.json lives within a larger repo. Paths within `skills[]` are still relative to skill.json itself.
 
 **Skill dependencies** — Use `dependencies` for intra-package relationships (skill B requires skill A from the same package). Use `requires.skills` for cross-package dependencies (`"other-package/skill-name"` format).
 
@@ -211,13 +213,13 @@ This project also ships as an AI agent skill. Install the `skills-json-generator
 ## Project Structure
 
 ```
-skills-json-generator/
+skill-json-generator/
 ├── SKILL.md                          # Agent skill instructions
-├── skills.json                       # This package's own metadata (dogfooded)
+├── skill.json                        # This package's own metadata (dogfooded)
 ├── README.md
 ├── references/
 │   ├── schema-spec.md                # Full specification
-│   └── skills.schema.json            # JSON Schema for validation
+│   └── skill.schema.json             # JSON Schema for validation
 └── scripts/
     ├── compute_integrity.py          # SRI hash computation
     └── validate.py                   # Schema + path + integrity validation
@@ -239,4 +241,4 @@ MIT
 
 ## Author
 
-Skills.json was created by [Christopher Skene)[https://github.com/xtfer]
+skill.json was created by [Christopher Skene](https://github.com/xtfer)

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://skills.json.org/schema/1.0.0/skills.schema.json",
-  "title": "skills.json",
+  "$id": "https://skill.json.org/schema/1.0.0/skill.schema.json",
+  "title": "skill.json",
   "description": "Publisher-side package metadata for AI agent skill packages. Describes what skills exist in a package and provides metadata for package managers, registries, and search tools.",
   "type": "object",
   "required": ["name", "version", "description", "skills"],
@@ -127,7 +127,7 @@
         },
         "directory": {
           "type": "string",
-          "description": "Subdirectory within the repo if skills.json is not at the root.",
+          "description": "Subdirectory within the repo if skill.json is not at the root.",
           "examples": ["packages/skills"]
         }
       }
@@ -151,7 +151,7 @@
         },
         "path": {
           "type": "string",
-          "description": "Relative path from skills.json to the skill directory.",
+          "description": "Relative path from skill.json to the skill directory.",
           "examples": ["./frontend-design", "./skills/pdf", "."]
         },
         "description": {
