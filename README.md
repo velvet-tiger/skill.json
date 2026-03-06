@@ -10,7 +10,7 @@ A universal package metadata format for AI agent skills.
 
 The AI agent skills ecosystem has half a dozen package managers and no agreed-upon way for a skill package to describe itself. Each tool reinvents discovery: some scan for `SKILL.md` files, some expect a proprietary manifest, some only support GitHub. If you publish a skill today, it works with one or two tools at best.
 
-`skill.json` is the publisher-side answer. You describe your package once, and skmr, skillman, skillbox, skills-manifest, skills-supply, the MCP registry, and whatever comes next can all consume it.
+`skill.json` is the publisher-side answer. You describe your package once, and any service that can read JSON can consume it.
 
 ## What It Is (and Isn't)
 
@@ -179,14 +179,8 @@ This project also ships as an AI agent skill. Install the `skill-json-generator`
 
 | Tool | Reads | Notes |
 |------|-------|-------|
-| [skmr](https://github.com/MinweiShen/skmr) | `skills[].name` | Maps to its manifest entries |
-| [skillman](https://github.com/pi0/skillman) | `skills[].name` | Maps to `{ source, skills }` pairs |
-| [skillbox](https://github.com/christiananagnostou/skillbox) | `name`, `path` per skill | Direct install targeting |
-| [skills-manifest](https://github.com/hairyf/skills-manifest) | `skills[].name` | Maps to its `{ repo: { name: true } }` format |
-| [skills-supply](https://github.com/803/skills-supply) | `name`, `path` per skill | Alternative to SKILL.md scanning |
-| [skills-detector](https://github.com/vercel-labs/skills-detector) | `tags`, `category`, `description` | Project-to-skill matching |
-| [MCP Registry](https://github.com/modelcontextprotocol/registry) | `name`, `version`, `repository` | Registry entry creation |
-| [Ai-Agent-Skills](https://github.com/skillcreatorai/Ai-Agent-Skills) | `skills[].name`, `description` | Catalogue indexing |
+| [Automatic](https://github.com/velvet-tiger/automatic) | Full compatibility ||
+
 
 ## Common Patterns
 
